@@ -69,6 +69,6 @@ while(true) %some condition to be determined later
         cluster_points=[c_i,c_j,c_k,c_red_int,c_green_int];
         new_center=mean(cluster_points,1);
         
-        
+        Err=sqrt(sum((new_center-CijkRG(ii,:)).^2));
     end
 end

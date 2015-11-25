@@ -1,0 +1,21 @@
+function [D]=compute_distance(scale_xyz,scale_Ir,...
+                ig,jg,kg,...
+                Ig,Ir,...
+                xyzC,IgC,IrC)
+    a=1;
+    b=1;
+
+    IgCmap=repmat(IgC,[size(Ir)]);
+    IrCmap=IrC*ones(size(Ir));
+    sz=size(xg);
+    
+    dt=1-sum(Ig.*IgCmap,4);
+    dijk=sqrt((xg-xyzC(1)*ones(sz)).^2+...
+              (yg-xyzC(2)*ones(sz)).^2+...
+              (zg-xyzC(3)*ones(sz)).^2);
+    dI=abs(Ir-IrCmap);
+    
+    D=dt+a*scale_xyz*dijk+b*scale_Ir*dI;
+    
+
+end
