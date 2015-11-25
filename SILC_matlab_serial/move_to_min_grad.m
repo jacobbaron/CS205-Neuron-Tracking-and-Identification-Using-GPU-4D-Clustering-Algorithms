@@ -1,7 +1,21 @@
 function [new_centers]=move_to_min_grad(img,v)
 new_centers=v;
-grad=padarray(abs(gradient(img)),[1,1,1],'replicate');
-v = v + 1;
+padded_img=padarray(img,[1,1,1]);
+%compute gradient
+grad=(padded_img(3:end,2:end-1,2:end-1)-...
+    padded_img(1:end-2,2:end-1,2:end-1)).^2+...
+    (padded_img(2:end-1,3:end,2:end-1)-...
+    padded_img(2:end-1,1:end-2,2:end-1)).^2+...
+    (padded_img(2:end-1,2:end-1,3:end)-...
+    padded_img(2:end-1,2:end-1,1:end-2)).^2;
+% if point started on edge, instead move one point in.
+v(v==1)=2;
+for jj=1:3
+    v(v(:,jj)==size(img,jj),jj)=size(img,jj)-1;
+end
+%iterate over centers, find smallest gradient in 3x3x3 volume
+
+
 for ii=1:length(v)
    search_range=grad(v(ii,1)-1:v(ii,1)+1,...
        v(ii,2)-1:v(ii,2)+1,(v(ii,3)-1:v(ii,3)+1));
