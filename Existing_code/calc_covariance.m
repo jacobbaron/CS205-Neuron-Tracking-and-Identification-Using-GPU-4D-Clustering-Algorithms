@@ -1,4 +1,4 @@
-function c=Kmean_xyzt4D(xyzt,varargin)
+function c=calc_covariance(xyzt,varargin)
 % c is the cluserting, optional Ninit,Niter, Nrep, lambda
 % parameter lambda>0 adjust the weight over physical location proximity
 xyzt=double(xyzt);
@@ -8,7 +8,7 @@ switch nargin
         Ninit=22;
         Niter=100;
         Nrep=10;
-        lambda=0;
+        lambda=1;
     case 2
         Ninit=varargin{1};
         Niter=100;
@@ -59,14 +59,22 @@ end
 
 xyztSpace=reshape(xyztSpace,[ny*nx*nz,3])*power(lambda,1/3);
 
-options = statset('MaxIter',Niter);
+for ii=1:(nx*ny*nz)
+    
+   variance_mat=cov(xyztLin(1,:),xyztLin(ii,:));
+   covariance(ii)=variance_mat(1,2);
+   
+end
+
+x=1;
+%options = statset('MaxIter',Niter);
 % options = statset('MaxIter',Niter,'UseParallel',true);
 
 
-IDX=kmeans([xyztSpace,xyztLin],[],'start',InitCenters,'onlinephase','off','replicates',Nrep,...
-    'options',options);%,% ,'emptyaction','drop',
+%IDX=kmeans([xyztSpace,xyztLin],[],'start',InitCenters,'onlinephase','off','replicates',Nrep,...
+%    'options',options);%,% ,'emptyaction','drop',
 
-c=reshape(IDX,[ny,nx,nz]);
+%c=reshape(IDX,[ny,nx,nz]);
 
 % c=zeros(ny,nx);
 % NpointCenter=zeros(1,Ninit); % number of elements in each center, will eliminate empty centers

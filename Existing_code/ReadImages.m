@@ -44,32 +44,32 @@
 %% 3D
 
 %% read from multiple stack figures.
-mydir = '.\Movie_Stacks\';
-Files = dir(strcat(mydir,'*.tif'));
+%mydir = '.\Movie_Stacks\';
+Files = dir('*.tif');
 nz = length(Files);
-info = imfinfo(strcat(mydir,Files(1).name));
+info = imfinfo(Files(1).name);
 nt = numel(info);
 ny=info(1).Width;
 nx=info(1).Height;
 
-img_stack = zeros(ny,nx,nz,nt);
+red_img_stack = zeros(ny,nx,nz,nt);
 
-poolobj = parpool('local',4);
-for i = 1:nz;
+%poolobj = parpool('local',4);
+parfor i = 1:nz;
     i
-    fname = strcat(mydir,Files(i).name);
+    fname = Files(i).name;
     for j=1:nt
         j
         A = imread(fname, j);
-        img_stack(:,:,i,j)=A;
+        red_img_stack(:,:,i,j)=A;
     end    
 end
-delete(poolobj);
+%delete(poolobj);
 
-img_mean = mean(img_stack, 4);
-nm_img_stack = img_stack;
+img_mean = mean(red_img_stack, 4);
+nm_img_stack = red_img_stack;
 for k = 1:nt
     k
-    nm_img_stack(:,:,:,k)= (img_stack(:,:,:,k)-img_mean)./img_mean;
+    nm_img_stack(:,:,:,k)= (red_img_stack(:,:,:,k)-img_mean)./img_mean;
 end
 
