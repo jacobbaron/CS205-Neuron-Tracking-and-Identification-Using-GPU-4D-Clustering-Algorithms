@@ -1,0 +1,29 @@
+function [D]=compute_distance(scale_ijk,scale_Ir,...
+                ig,jg,kg,...
+                Ig,Ir,...
+                ijkC,IgC,IrC)
+
+
+%Ig is the green channel signal for the given search range
+%Ir is the red channel signal for the given search range
+%ijkC is the coordinate of the superpixel center
+%IgC is the signal from the green channel at the superpixel center
+%IrC is the average signal from the red channel at superpixel center
+
+    a=.1;
+    b=.1;
+    c=1;
+    IgCmap=repmat(IgC,[size(Ir)]);
+    IrCmap=IrC*ones(size(Ir));
+    sz=size(ig);
+    
+    dt=1-sum(Ig.*IgCmap,4);
+    dijk=sqrt((ig-ijkC(1)*ones(sz)).^2+...
+              (jg-ijkC(2)*ones(sz)).^2+...
+              (kg-ijkC(3)*ones(sz)).^2);
+    dI=abs(Ir-IrCmap);
+    
+    D=c*dt+a*scale_ijk*dijk+b*scale_Ir*dI;
+    
+
+end

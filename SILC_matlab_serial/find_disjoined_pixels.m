@@ -1,0 +1,33 @@
+function[label]=find_disjoined_pixels(label)
+
+label_inner=label(2:end-1,2:end-1,2:end-1);
+
+disjoined_pixels=ones(size(label_inner));
+num_disjoined_pixels(1)=length(find(disjoined_pixels));
+num_disjoined_pixels(2)=0;
+while (num_disjoined_pixels(1)~=num_disjoined_pixels(2))
+    label_i_pos=label(3:end,2:end-1,2:end-1);
+    label_i_neg=label(1:end-2,2:end-1,2:end-1);
+    label_j_pos=label(2:end-1,3:end,2:end-1);
+    label_j_neg=label(2:end-1,1:end-2,2:end-1);
+    label_k_pos=label(2:end-1,2:end-1,3:end);
+    label_k_neg=label(2:end-1,2:end-1,1:end-2);
+    disjoined_pixels=(label_inner~=label_i_pos &...
+        label_inner~=label_i_neg &...
+        label_inner~=label_j_pos &...
+        label_inner~=label_j_neg &...
+        label_inner~=label_k_pos &...
+        label_inner~=label_k_neg);
+        
+        surrounding_pixels=[label_i_pos(disjoined_pixels),...
+            label_i_neg(disjoined_pixels),...
+            label_j_pos(disjoined_pixels),...
+            label_j_neg(disjoined_pixels),...
+            label_k_pos(disjoined_pixels),...
+            label_k_neg(disjoined_pixels)];
+        label_inner(disjoined_pixels)=mode(surrounding_pixels,2);
+        num_disjoined_pixels(1)=num_disjoined_pixels(2);
+        num_disjoined_pixels(2)=length(find(disjoined_pixels));
+        imshow3D(label_inner);
+        label(2:end-1,2:end-1,2:end-1)=label_inner;
+end

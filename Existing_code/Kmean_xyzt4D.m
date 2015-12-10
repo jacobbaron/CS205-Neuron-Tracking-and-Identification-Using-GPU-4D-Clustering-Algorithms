@@ -5,7 +5,7 @@ xyzt=double(xyzt);
 
 switch nargin
     case 1
-        Ninit=40;
+        Ninit=22;
         Niter=100;
         Nrep=10;
         lambda=0;
