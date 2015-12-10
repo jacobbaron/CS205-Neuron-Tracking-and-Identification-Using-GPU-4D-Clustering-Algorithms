@@ -87,20 +87,9 @@ for iter=1:10 %some condition to be determined later
     end
     %% 
     
-    imshow3D(label);
     disp(sqrt(sum(Err(Err~=inf).^2)));
 end
 %enfore connectivity
 [label,num_objects]=enforce_connectivity(label,Cijk);
-
-for ii=1:length(Cijk)
-    mean_sig(ii)=mean(red_img_avg(label==ii));
-end
-[~, Idx]=sort(mean_sig,'descend');
-label_filtered=label.*(ismember(label,Idx(1:6)));
-imshow3D(label_filtered)
-colormap(colorcube)
-colorbar
-%new_label=find_disjoined_pixels(label);
-toc
-plot_3D_stuff;
+num_disp_clusters=10;
+label_filtered=find_plot_top_n_clusters(length(Cijk(:,1)),img_stack,label,red_img_avg,num_disp_clusters);
